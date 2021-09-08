@@ -1,0 +1,5 @@
+mutation verify_user($username:String!,$otp:String!){
+  verifyUser(username:$username,otpMessage:$otp){
+    status
+  }
+}

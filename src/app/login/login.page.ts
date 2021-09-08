@@ -48,7 +48,7 @@ export class LoginPage implements OnInit {
             //   })
             // }
             loading.dismiss();
-            this.router.navigate(['/']);
+            this.router.navigate(['/tabs/tab1']);
             // console.log(this.username)
           }
         },

@@ -1,0 +1,11 @@
+query profile($id:ID!){
+  Profile(id:$id){
+    id
+    phoneNumber
+    email
+    firstName
+    lastName
+    age
+    status
+  }
+}

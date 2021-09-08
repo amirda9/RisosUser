@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>
-      Tab 1
+    <ion-title class="ion-text-center" style="color: white">
+      Smile Design
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -13,5 +13,106 @@
     </ion-toolbar>
   </ion-header>
 
-  <app-explore-container name="Tab 1 page"></app-explore-container>
+  <ion-grid>
+    <ion-row>
+      <div id="container" ></div>
+    </ion-row>
+    <ion-row>
+      <ion-col size="12">
+        <ion-row class="ion-padding-vertical">
+        <ion-segment scrollable value="" (ionChange)="choseTeethModel($event)">
+          <ion-segment-button *ngFor="let model of teethModel;" value="{{model}}">
+            {{model}}
+          </ion-segment-button>
+        </ion-segment>
+      </ion-row>
+      <ion-row>
+        <ion-segment *ngIf="chosenModel" scrollable value="{{chosenTeeth}}" (ionChange)="choseTeethPerModel($event)">
+          <ion-segment-button value="0">
+            all teeth
+          </ion-segment-button>
+          <ion-segment-button *ngFor="let teeth of teethsPerModel;" value="{{teeth}}">
+            {{teeth}}
+          </ion-segment-button>
+        </ion-segment>
+      </ion-row>
+      <ion-row class="ion-padding-vertical">
+        <ion-segment *ngIf="chosenModel" scrollable value="{{chosenColor}}" (ionChange)="choseColor($event)">
+          <ion-segment-button value="0">
+            no color
+          </ion-segment-button>
+          <ion-segment-button *ngFor="let color of teethColors;" value="{{color}}">
+            {{color}}
+          </ion-segment-button>
+        </ion-segment>
+      </ion-row>
+      </ion-col>
+    </ion-row>
+
+    <!-- <ion-row class="ion-justify-content-center ion-padding-horizontal ">
+      <ion-col class="ion-text-center" size="10" size-lg="6">
+        <ion-button (click)="reload()" shape="round" style="
+        text-transform: none;
+        width: 100%;
+        color: black;
+        --background: #3abff8;
+        height: 2em;
+        font-size: 1em;
+        border-radius: 20px 20px 20px 20px;
+        border: 1px solid #e5e5ea;
+        box-shadow: 0px 1px 2px #000000;
+        font-weight: lighter;
+      " translate>
+          Reload
+        </ion-button>
+      </ion-col>
+    </ion-row> -->
+
+
+
+    <ion-row class="ion-justify-content-center ion-padding-horizontal">
+      <ion-col class="ion-text-center" size="10" size-lg="6">
+        <ion-button (click)="finalize()" shape="round" style="
+            text-transform: none;
+            width: 100%;
+            color: black;
+            --background: #3abff8;
+            height: 2em;
+            font-size: 1em;
+            border-radius: 20px 20px 20px 20px;
+            border: 1px solid #e5e5ea;
+            box-shadow: 0px 1px 2px #000000;
+            font-weight: lighter;
+          " translate>
+          Show Result
+        </ion-button>
+      </ion-col>
+    </ion-row>
+
+    <ion-row class="ion-justify-content-center ion-padding-horizontal ">
+      <ion-col class="ion-text-center" size="10" size-lg="6">
+        <ion-button [hidden]="status" (click)="export()" shape="round" style="
+            text-transform: none;
+            width: 100%;
+            color: black;
+            --background: #73cf09;
+            height: 2em;
+            font-size: 1em;
+            border-radius: 20px 20px 20px 20px;
+            border: 1px solid #e5e5ea;
+            box-shadow: 0px 1px 2px #000000;
+            font-weight: lighter;
+          " translate>
+          Go
+        </ion-button>
+      </ion-col>
+    </ion-row>
+
+
+
+
+  </ion-grid>
+
+
+
 </ion-content>

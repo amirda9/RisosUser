@@ -2554,6 +2554,13 @@ export type SmileDesignNode = {
   id: Scalars['ID'];
 };
 
+export type ForgetPassMutationVariables = Exact<{
+  phoneNumber: Scalars['String'];
+}>;
+
+
+export type ForgetPassMutation = { __typename?: 'Mutations', forgetPass?: Maybe<{ __typename?: 'ForgetPass', status?: Maybe<string> }> };
+
 export type LoginMutationVariables = Exact<{
   username: Scalars['String'];
   password: Scalars['String'];
@@ -2571,6 +2578,53 @@ export type RegisterMutationVariables = Exact<{
 
 export type RegisterMutation = { __typename?: 'Mutations', createUser?: Maybe<{ __typename?: 'CreateUser', token?: Maybe<string> }> };
 
+export type Req_OtpMutationVariables = Exact<{
+  username: Scalars['String'];
+}>;
+
+
+export type Req_OtpMutation = { __typename?: 'Mutations', requestOtp?: Maybe<{ __typename?: 'RequestOTP', status?: Maybe<string> }> };
+
+export type ProfileQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type ProfileQuery = { __typename?: 'Query', Profile?: Maybe<{ __typename?: 'Profile', id: string, phoneNumber?: Maybe<string>, email?: Maybe<string>, firstName?: Maybe<string>, lastName?: Maybe<string>, age?: Maybe<number>, status: ExtendprofileProfileStatusChoices }> };
+
+export type OtpMutationVariables = Exact<{
+  user: Scalars['String'];
+}>;
+
+
+export type OtpMutation = { __typename?: 'Mutations', requestOtp?: Maybe<{ __typename?: 'RequestOTP', status?: Maybe<string> }> };
+
+export type Verify_UserMutationVariables = Exact<{
+  username: Scalars['String'];
+  otp: Scalars['String'];
+}>;
+
+
+export type Verify_UserMutation = { __typename?: 'Mutations', verifyUser?: Maybe<{ __typename?: 'VerifyUser', status?: Maybe<string> }> };
+
+export const ForgetPassDocument = gql`
+    mutation forgetPass($phoneNumber: String!) {
+  forgetPass(phoneNumber: $phoneNumber) {
+    status
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class ForgetPassGQL extends Apollo.Mutation<ForgetPassMutation, ForgetPassMutationVariables> {
+    document = ForgetPassDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const LoginDocument = gql`
     mutation login($username: String!, $password: String!) {
   tokenAuth(username: $username, password: $password) {
@@ -2603,6 +2657,84 @@ export const RegisterDocument = gql`
   })
   export class RegisterGQL extends Apollo.Mutation<RegisterMutation, RegisterMutationVariables> {
     document = RegisterDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const Req_OtpDocument = gql`
+    mutation req_otp($username: String!) {
+  requestOtp(username: $username) {
+    status
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class Req_OtpGQL extends Apollo.Mutation<Req_OtpMutation, Req_OtpMutationVariables> {
+    document = Req_OtpDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const ProfileDocument = gql`
+    query profile($id: ID!) {
+  Profile(id: $id) {
+    id
+    phoneNumber
+    email
+    firstName
+    lastName
+    age
+    status
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class ProfileGQL extends Apollo.Query<ProfileQuery, ProfileQueryVariables> {
+    document = ProfileDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const OtpDocument = gql`
+    mutation OTP($user: String!) {
+  requestOtp(username: $user) {
+    status
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class OtpGQL extends Apollo.Mutation<OtpMutation, OtpMutationVariables> {
+    document = OtpDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const Verify_UserDocument = gql`
+    mutation verify_user($username: String!, $otp: String!) {
+  verifyUser(username: $username, otpMessage: $otp) {
+    status
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class Verify_UserGQL extends Apollo.Mutation<Verify_UserMutation, Verify_UserMutationVariables> {
+    document = Verify_UserDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
