@@ -2585,6 +2585,14 @@ export type Req_OtpMutationVariables = Exact<{
 
 export type Req_OtpMutation = { __typename?: 'Mutations', requestOtp?: Maybe<{ __typename?: 'RequestOTP', status?: Maybe<string> }> };
 
+export type ChangePassMutationVariables = Exact<{
+  new: Scalars['String'];
+  user: Scalars['String'];
+}>;
+
+
+export type ChangePassMutation = { __typename?: 'Mutations', changePassword?: Maybe<{ __typename?: 'ChangePassword', status?: Maybe<string> }> };
+
 export type ProfileQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
@@ -2675,6 +2683,24 @@ export const Req_OtpDocument = gql`
   })
   export class Req_OtpGQL extends Apollo.Mutation<Req_OtpMutation, Req_OtpMutationVariables> {
     document = Req_OtpDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const ChangePassDocument = gql`
+    mutation changePass($new: String!, $user: String!) {
+  changePassword(newPassword: $new, username: $user) {
+    status
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class ChangePassGQL extends Apollo.Mutation<ChangePassMutation, ChangePassMutationVariables> {
+    document = ChangePassDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
