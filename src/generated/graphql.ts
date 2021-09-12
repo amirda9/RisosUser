@@ -1067,6 +1067,7 @@ export type Patient = BusinessLogicNode & {
   /** The ID of the object */
   id: Scalars['ID'];
   patientPic?: Maybe<PatientPic>;
+  patientPics?: Maybe<PatientPic>;
   relatedProfile: Profile;
   serviceSet: Array<ServiceType>;
   smileDesigns: SmileDesignServiceConnection;
@@ -1140,6 +1141,7 @@ export type PatientPic = BusinessLogicNode & {
   id: Scalars['ID'];
   optionalImage?: Maybe<Scalars['String']>;
   patient?: Maybe<PatientType>;
+  patients?: Maybe<PatientType>;
   sideImage?: Maybe<Scalars['String']>;
   smileImage?: Maybe<Scalars['String']>;
   updatedAt?: Maybe<Scalars['DateTime']>;
@@ -1171,6 +1173,7 @@ export type PatientType = {
   doctor: DoctorConnection;
   id: Scalars['ID'];
   patientPic?: Maybe<PatientPic>;
+  patientPics?: Maybe<PatientPic>;
   relatedProfile: Profile;
   serviceSet: Array<ServiceType>;
   smileDesigns: SmileDesignServiceConnection;
@@ -1776,6 +1779,8 @@ export type QueryAllPatientArgs = {
   offset?: Maybe<Scalars['Int']>;
   patientPic?: Maybe<Scalars['ID']>;
   patientPic_In?: Maybe<Array<Maybe<Scalars['String']>>>;
+  patientPics?: Maybe<Scalars['ID']>;
+  patientPics_In?: Maybe<Array<Maybe<Scalars['String']>>>;
   profileId?: Maybe<Array<Maybe<Scalars['String']>>>;
   relatedProfile?: Maybe<Scalars['ID']>;
   relatedProfile_In?: Maybe<Array<Maybe<Scalars['String']>>>;
@@ -1801,6 +1806,8 @@ export type QueryAllPatientpicArgs = {
   offset?: Maybe<Scalars['Int']>;
   patient?: Maybe<Scalars['ID']>;
   patient_In?: Maybe<Array<Maybe<Scalars['String']>>>;
+  patients?: Maybe<Scalars['ID']>;
+  patients_In?: Maybe<Array<Maybe<Scalars['String']>>>;
   updatedAt?: Maybe<Scalars['DateTime']>;
   updatedAt_In?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
@@ -2620,12 +2627,27 @@ export type MypatQueryVariables = Exact<{
 
 export type MypatQuery = { __typename?: 'Query', Patient?: Maybe<{ __typename?: 'Patient', _id?: Maybe<number>, patientPic?: Maybe<{ __typename?: 'PatientPic', sideImage?: Maybe<string>, fullSmileImage?: Maybe<string>, optionalImage?: Maybe<string>, smileImage?: Maybe<string> }> }> };
 
+export type AllsmileQueryVariables = Exact<{
+  pId?: Maybe<Array<Maybe<Scalars['String']>> | Maybe<Scalars['String']>>;
+}>;
+
+
+export type AllsmileQuery = { __typename?: 'Query', allSmiledesignservice?: Maybe<{ __typename?: 'SmileDesignServiceConnection', edges: Array<Maybe<{ __typename?: 'SmileDesignServiceEdge', node?: Maybe<{ __typename?: 'SmileDesignService', status: SmiledesignSmileDesignServiceStatusChoices, teethLessImage?: Maybe<string>, width?: Maybe<number>, heigth?: Maybe<number> }> }>> }> };
+
 export type ProfileQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
 export type ProfileQuery = { __typename?: 'Query', Profile?: Maybe<{ __typename?: 'Profile', id: string, phoneNumber?: Maybe<string>, email?: Maybe<string>, firstName?: Maybe<string>, lastName?: Maybe<string>, age?: Maybe<number> }> };
+
+export type Update_PicMutationVariables = Exact<{
+  id: Scalars['Int'];
+  pics: PatientPics;
+}>;
+
+
+export type Update_PicMutation = { __typename?: 'Mutations', updatePatientPic?: Maybe<{ __typename?: 'UpdatePatientPic', status?: Maybe<string> }> };
 
 export type OtpMutationVariables = Exact<{
   user: Scalars['String'];
@@ -2805,6 +2827,31 @@ export const MypatDocument = gql`
       super(apollo);
     }
   }
+export const AllsmileDocument = gql`
+    query allsmile($pId: [String]) {
+  allSmiledesignservice(patient_In: $pId) {
+    edges {
+      node {
+        status
+        teethLessImage
+        width
+        heigth
+      }
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class AllsmileGQL extends Apollo.Query<AllsmileQuery, AllsmileQueryVariables> {
+    document = AllsmileDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const ProfileDocument = gql`
     query profile($id: ID!) {
   Profile(id: $id) {
@@ -2823,6 +2870,24 @@ export const ProfileDocument = gql`
   })
   export class ProfileGQL extends Apollo.Query<ProfileQuery, ProfileQueryVariables> {
     document = ProfileDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const Update_PicDocument = gql`
+    mutation update_pic($id: Int!, $pics: patientPics!) {
+  updatePatientPic(patientId: $id, patientPics: $pics) {
+    status
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class Update_PicGQL extends Apollo.Mutation<Update_PicMutation, Update_PicMutationVariables> {
+    document = Update_PicDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

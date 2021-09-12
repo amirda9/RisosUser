@@ -16,6 +16,13 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
+  <!-- <div><input type="file" (change)="fileChangeEvent($event)"/></div>
+
+<ngx-photo-editor
+  [imageChanedEvent]="imageChangedEvent"
+  (imageCropped)="imageCropped($event)"></ngx-photo-editor>
+
+<img [src]="base64" alt=""> -->
   <ion-row>
     <ion-col>
       <ion-card style="--background: #f7f7f7">
@@ -100,9 +107,21 @@
           Your Pictures
         </ion-card-title>
       <ion-card-content>
-
+        <ion-row class="ion-justify-content-center">
+          <input id="getFile" type="file" style="display: none" accept="image/png, image/jpg, image/jpeg" (change)="fileChangeEvent($event)" />
+        <img style="height:20vh"
+        src="https://api.risos.co/mediafiles/{{smileImg}}"
+        />
+        
+        </ion-row>
+        <ion-row class="ion-padding ion-justify-content-center">
+          <ion-button onclick="document.getElementById('getFile').click()">Edit</ion-button>
+        </ion-row>
+        
       </ion-card-content>
       </ion-card>
     </ion-col>
   </ion-row>
+
+  
 </ion-content>

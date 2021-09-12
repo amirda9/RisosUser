@@ -3,7 +3,7 @@ import { Component, Renderer2 } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { AlertController, LoadingController } from '@ionic/angular';
 import Konva from 'konva';
-import { MypatGQL } from 'src/generated/graphql';
+import { AllsmileGQL, MypatGQL } from 'src/generated/graphql';
 import { P_ID } from '../constants';
 import {
   dentalShades,
@@ -49,7 +49,8 @@ export class Tab1Page {
     private router: Router,
     private renderer: Renderer2,
     private myPatgql: MypatGQL,
-    private alertcontroller: AlertController
+    private alertcontroller: AlertController,
+    private smileDesign: AllsmileGQL
   ) {}
   // eslint-disable-next-line @angular-eslint/use-lifecycle-interface
   ngOnInit() {
@@ -67,12 +68,13 @@ export class Tab1Page {
           imageObj.crossOrigin = 'anonymous';
         }
         else{
+          // console.log("here")
           const alert = await this.alertcontroller.create({
             cssClass: 'my-custom-class',
             // header: 'Alert',
             // subHeader: 'Subtitle',
-            message: 'Invalid Creditentials',
-            buttons: [{text:'Try Again!',cssClass:'my-custom-class'}]
+            message: 'There is no picture !',
+            buttons: [{text:'UPLOAD',cssClass:'my-custom-class',handler:(blah)=>{this.router.navigate(['/tabs/tab2']);}}]
           });
           await alert.present();
         }
@@ -81,6 +83,18 @@ export class Tab1Page {
         console.log(1);
       }
       );
+
+      this.smileDesign.watch({
+        pId:localStorage.getItem(P_ID)
+      }
+      ).valueChanges.subscribe(res=>{
+        console.log(res.data.allSmiledesignservice.edges[0].node.status)
+        this.teethless = res.data.allSmiledesignservice.edges[0].node.teethLessImage;
+        // console.log(this.teethless);
+        this.imageObj3.src = 'https://api.risos.co/mediafiles/'+String(this.teethless);
+        // imageObj3.src = "https://api.risos.co/mediafiles/82_74.png";
+        this.imageObj3.crossOrigin="anonymous"
+      });
 
     // imageObj.src = 'https://api.risos.co/mediafiles/1631095827445.jpeg';
     // imageObj.crossOrigin = 'anonymous';

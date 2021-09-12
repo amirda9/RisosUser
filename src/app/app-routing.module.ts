@@ -38,6 +38,10 @@ const routes: Routes = [
   {
     path: 'reset-pass',
     loadChildren: () => import('./reset-pass/reset-pass.module').then( m => m.ResetPassPageModule)
+  },
+  {
+    path: 'dr',
+    loadChildren: () => import('./dr/dr.module').then( m => m.DrPageModule)
   }
 ];
 @NgModule({

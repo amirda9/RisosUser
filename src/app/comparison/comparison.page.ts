@@ -26,7 +26,7 @@ export class ComparisonPage implements OnInit {
   forward() {
     // console.log("go")
     // console.log(this._id)
-    this.router.navigate(['/tabs/tab1']);
+    this.router.navigate(['/tabs/dr']);
   }
 
   backward() {
