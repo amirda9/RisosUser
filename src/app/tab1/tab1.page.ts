@@ -1,8 +1,10 @@
 /* eslint-disable no-var */
 import { Component, Renderer2 } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
-import { LoadingController } from '@ionic/angular';
+import { AlertController, LoadingController } from '@ionic/angular';
 import Konva from 'konva';
+import { MypatGQL } from 'src/generated/graphql';
+import { P_ID } from '../constants';
 import {
   dentalShades,
   teethImg,
@@ -45,37 +47,58 @@ export class Tab1Page {
     private loadingController: LoadingController,
     private route: ActivatedRoute,
     private router: Router,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private myPatgql: MypatGQL,
+    private alertcontroller: AlertController
   ) {}
   // eslint-disable-next-line @angular-eslint/use-lifecycle-interface
   ngOnInit() {
     const imageObj = new Image();
+    this.myPatgql
+      .watch({
+        id: 'Patient:' + localStorage.getItem(P_ID),
+      })
+      .valueChanges.subscribe(async (res) => {
+        // this.smileimg = res.data.Patient.patientPic.smileImage;
+        if(res.data.Patient.patientPic){
+          this.smileimg = res.data.Patient.patientPic.smileImage;
+          imageObj.src =
+            'https://api.risos.co/mediafiles/' + String(this.smileimg);
+          imageObj.crossOrigin = 'anonymous';
+        }
+        else{
+          const alert = await this.alertcontroller.create({
+            cssClass: 'my-custom-class',
+            // header: 'Alert',
+            // subHeader: 'Subtitle',
+            message: 'Invalid Creditentials',
+            buttons: [{text:'Try Again!',cssClass:'my-custom-class'}]
+          });
+          await alert.present();
+        }
+      },
+      error=>{
+        console.log(1);
+      }
+      );
 
-    imageObj.src = 'https://api.risos.co/mediafiles/1631095827445.jpeg';
-    imageObj.crossOrigin='anonymous';
-
+    // imageObj.src = 'https://api.risos.co/mediafiles/1631095827445.jpeg';
+    // imageObj.crossOrigin = 'anonymous';
     this.teethModel = Object.keys(teethImg);
-    // console.log(this.translateserv.currentLang)
 
     this.teethColors = Object.keys(dentalShades);
-    // this.teethsPerModel = teethImg["rectangle"];
     this.teeth = [];
     this.teethKi = [];
     Konva.pixelRatio = 1;
     this.stage = new Konva.Stage({
       container: 'container',
       width: 400,
-      height: 400
+      height: 400,
     });
     this.teethPositionX = 50;
     this.teethPositionY = 50;
     this.backgroundLayer = new Konva.Layer();
     this.stage.add(this.backgroundLayer);
-
-    // console.log(this.translateserv.instant(JSON.stringify(this.teethModel)))
-
-    // console.log(this.smileimg + "is ready")
-    // main API:
 
     const yoda = new Konva.Image({
       name: 'person',
@@ -94,13 +117,11 @@ export class Tab1Page {
     this.teethLayer = new Konva.Layer();
     this.stage.add(this.teethLayer);
     this.imageObj3.src = 'https://api.risos.co/mediafiles/23_23.png';
-    this.imageObj3.crossOrigin='anonymous';
+    this.imageObj3.crossOrigin = 'anonymous';
   }
 
   result(e): void {
-    // console.log(this.focus, e.target.value)
     this.focus = e.target.value;
-    // console.log(this.focus, e.target.value)
     const val = e.target.value;
     // console.log(val)
     const tooths = this.teeth;
@@ -162,9 +183,6 @@ export class Tab1Page {
           toothKI.height((196 / tooth.width) * tooth.height);
           this.teethLayer.add(toothKI);
           this.layerCount = this.layerCount + 1;
-          // toothKI.cache();
-          // toothKI.filters([Konva.Filters.RGBA]);
-          // toothKI.red(dentalShades["A1"].red).blue(dentalShades["A1"].blue).green(dentalShades["A1"].green).alpha(0.4);
         };
       });
 
@@ -181,8 +199,6 @@ export class Tab1Page {
     }
   }
   choseTeethPerModel(ev: any) {
-    // this.t_model = ev.detail.value;
-    // console.log(ev.detail.value)
     if (this.chosenTeeth !== ev.detail.value) {
       this.chosenTeeth = ev.detail.value;
       if (this.chosenTeeth !== '0') {
@@ -246,7 +262,9 @@ export class Tab1Page {
     this.status = false;
 
     // console.log(this.backgroundLayer.getChildren()[0]);
-    this.backgroundLayer.getChildren()[0].setAttrs({ image: this.imageObj3, zIndex: 3 });
+    this.backgroundLayer
+      .getChildren()[0]
+      .setAttrs({ image: this.imageObj3, zIndex: 3 });
     for (let j = 0; j < tooths.length; j++) {
       this.teethKi[j].setAttr('opacity', 1);
       // this.teethKi[j].setAttr("draggable", false)
@@ -256,26 +274,22 @@ export class Tab1Page {
 
   export() {
     this.backgroundLayer.zIndex(99);
-    this.transform.remove();//TODO: remove teeth from background image and change the z index of the teeth
+    this.transform.remove(); //TODO: remove teeth from background image and change the z index of the teeth
     const data1 = this.stage.toDataURL();
     const data = atob(data1.substring('data:image/png;base64,'.length));
-      const asArray = new Uint8Array(data1.length);
+    const asArray = new Uint8Array(data1.length);
 
     for (var i = 0, len = data.length; i < len; ++i) {
       asArray[i] = data.charCodeAt(i);
     }
 
-    var blob = new Blob([asArray.buffer], { type: 'image/png'});
+    var blob = new Blob([asArray.buffer], { type: 'image/png' });
     const navigationExtras: NavigationExtras = {
       state: {
         image: blob,
-
-      }
+      },
     };
 
     this.router.navigate(['/comparison'], navigationExtras);
-    // this.router.navigate(['/comparison'], navigationExtras);
-    // console.log(blob)
   }
-  // e
 }

@@ -612,9 +612,10 @@ export type MutationsCreatePatientArgs = {
   description?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
+  password?: Maybe<Scalars['String']>;
   patientPics?: Maybe<PatientPics>;
   phoneNumber: Scalars['String'];
-  profileDoctorId: Scalars['Int'];
+  profileDoctorId?: Maybe<Scalars['Int']>;
 };
 
 
@@ -1775,6 +1776,7 @@ export type QueryAllPatientArgs = {
   offset?: Maybe<Scalars['Int']>;
   patientPic?: Maybe<Scalars['ID']>;
   patientPic_In?: Maybe<Array<Maybe<Scalars['String']>>>;
+  profileId?: Maybe<Array<Maybe<Scalars['String']>>>;
   relatedProfile?: Maybe<Scalars['ID']>;
   relatedProfile_In?: Maybe<Array<Maybe<Scalars['String']>>>;
   searchByName?: Maybe<Scalars['String']>;
@@ -2569,6 +2571,24 @@ export type LoginMutationVariables = Exact<{
 
 export type LoginMutation = { __typename?: 'Mutations', tokenAuth?: Maybe<{ __typename?: 'ObtainJSONWebToken', token: string, profile?: Maybe<string> }> };
 
+export type PatientQueryVariables = Exact<{
+  profile?: Maybe<Array<Maybe<Scalars['String']>> | Maybe<Scalars['String']>>;
+}>;
+
+
+export type PatientQuery = { __typename?: 'Query', allPatient?: Maybe<{ __typename?: 'PatientConnection', edges: Array<Maybe<{ __typename?: 'PatientEdge', node?: Maybe<{ __typename?: 'Patient', id: string }> }>> }> };
+
+export type CreatepatientMutationVariables = Exact<{
+  name: Scalars['String'];
+  phoneNo: Scalars['String'];
+  age: Scalars['Int'];
+  pass: Scalars['String'];
+  email?: Maybe<Scalars['String']>;
+}>;
+
+
+export type CreatepatientMutation = { __typename?: 'Mutations', createPatient?: Maybe<{ __typename?: 'CreatePatient', token?: Maybe<string>, user?: Maybe<string>, profile?: Maybe<string> }> };
+
 export type RegisterMutationVariables = Exact<{
   username: Scalars['String'];
   password: Scalars['String'];
@@ -2593,12 +2613,19 @@ export type ChangePassMutationVariables = Exact<{
 
 export type ChangePassMutation = { __typename?: 'Mutations', changePassword?: Maybe<{ __typename?: 'ChangePassword', status?: Maybe<string> }> };
 
+export type MypatQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type MypatQuery = { __typename?: 'Query', Patient?: Maybe<{ __typename?: 'Patient', _id?: Maybe<number>, patientPic?: Maybe<{ __typename?: 'PatientPic', sideImage?: Maybe<string>, fullSmileImage?: Maybe<string>, optionalImage?: Maybe<string>, smileImage?: Maybe<string> }> }> };
+
 export type ProfileQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type ProfileQuery = { __typename?: 'Query', Profile?: Maybe<{ __typename?: 'Profile', id: string, phoneNumber?: Maybe<string>, email?: Maybe<string>, firstName?: Maybe<string>, lastName?: Maybe<string>, age?: Maybe<number>, status: ExtendprofileProfileStatusChoices }> };
+export type ProfileQuery = { __typename?: 'Query', Profile?: Maybe<{ __typename?: 'Profile', id: string, phoneNumber?: Maybe<string>, email?: Maybe<string>, firstName?: Maybe<string>, lastName?: Maybe<string>, age?: Maybe<number> }> };
 
 export type OtpMutationVariables = Exact<{
   user: Scalars['String'];
@@ -2647,6 +2674,54 @@ export const LoginDocument = gql`
   })
   export class LoginGQL extends Apollo.Mutation<LoginMutation, LoginMutationVariables> {
     document = LoginDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const PatientDocument = gql`
+    query patient($profile: [String]) {
+  allPatient(relatedProfile_In: $profile) {
+    edges {
+      node {
+        id
+      }
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class PatientGQL extends Apollo.Query<PatientQuery, PatientQueryVariables> {
+    document = PatientDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const CreatepatientDocument = gql`
+    mutation createpatient($name: String!, $phoneNo: String!, $age: Int!, $pass: String!, $email: String) {
+  createPatient(
+    name: $name
+    age: $age
+    phoneNumber: $phoneNo
+    password: $pass
+    email: $email
+  ) {
+    token
+    user
+    profile
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class CreatepatientGQL extends Apollo.Mutation<CreatepatientMutation, CreatepatientMutationVariables> {
+    document = CreatepatientDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
@@ -2706,6 +2781,30 @@ export const ChangePassDocument = gql`
       super(apollo);
     }
   }
+export const MypatDocument = gql`
+    query mypat($id: ID!) {
+  Patient(id: $id) {
+    _id
+    patientPic {
+      sideImage
+      fullSmileImage
+      optionalImage
+      smileImage
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class MypatGQL extends Apollo.Query<MypatQuery, MypatQueryVariables> {
+    document = MypatDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const ProfileDocument = gql`
     query profile($id: ID!) {
   Profile(id: $id) {
@@ -2715,7 +2814,6 @@ export const ProfileDocument = gql`
     firstName
     lastName
     age
-    status
   }
 }
     `;

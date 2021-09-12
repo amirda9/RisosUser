@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertController, LoadingController } from '@ionic/angular';
-import { LoginGQL } from 'src/generated/graphql';
-import { AUTHTOKEN, ID } from '../constants';
+import { LoginGQL , PatientGQL } from 'src/generated/graphql';
+import { AUTHTOKEN, ID, P_ID, USERNAME } from '../constants';
 
 @Component({
   selector: 'app-login',
@@ -16,7 +16,7 @@ export class LoginPage implements OnInit {
   token: string;
   loginBool: boolean;
   constructor(private loginGQL: LoginGQL,private loadingcontroller: LoadingController,private router: Router
-    , private alertcontroller: AlertController) { }
+    , private alertcontroller: AlertController , private patientgql: PatientGQL) { }
 
   ngOnInit() {
   }
@@ -39,16 +39,14 @@ export class LoginPage implements OnInit {
             this.token = next.data.tokenAuth.token;
             localStorage.setItem(ID,next.data.tokenAuth.profile);
             localStorage.setItem(AUTHTOKEN,this.token);
-            // if(localStorage.getItem(DID)){
-            //   this.cdevice.mutate({
-            //     ProfileId:next.data.tokenAuth.profile,
-            //     deviceId:localStorage.getItem(DID)
-            //   }).subscribe(res=>{
-            //     console.log(res.data.createDevice.status)
-            //   })
-            // }
-            loading.dismiss();
-            this.router.navigate(['/tabs/tab1']);
+            localStorage.setItem(USERNAME,myId);
+            this.patientgql.watch({
+              profile:next.data.tokenAuth.profile
+            }).valueChanges.subscribe(res=>{
+              localStorage.setItem(P_ID,res.data.allPatient.edges[0].node.id);
+              loading.dismiss();
+              this.router.navigate(['/tabs/tab1']);
+            });
             // console.log(this.username)
           }
         },

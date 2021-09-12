@@ -7,12 +7,11 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
+  <!-- <ion-header collapse="condense">
     <ion-toolbar>
       <ion-title size="large">Tab 1</ion-title>
     </ion-toolbar>
-  </ion-header>
-
+  </ion-header> -->
   <ion-grid>
     <ion-row>
       <div id="container" ></div>
@@ -20,7 +19,7 @@
     <ion-row>
       <ion-col size="12">
         <ion-row class="ion-padding-vertical">
-        <ion-segment scrollable value="" (ionChange)="choseTeethModel($event)">
+        <ion-segment scrollable value="" mode="md" (ionChange)="choseTeethModel($event)">
           <ion-segment-button *ngFor="let model of teethModel;" value="{{model}}">
             {{model}}
           </ion-segment-button>

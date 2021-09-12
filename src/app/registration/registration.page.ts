@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 import { AlertController, LoadingController } from '@ionic/angular';
-import { RegisterGQL, Req_OtpGQL } from 'src/generated/graphql';
+import { CreatepatientGQL, RegisterGQL, Req_OtpGQL } from 'src/generated/graphql';
 import { USERNAME } from '../constants';
 
 @Component({
@@ -16,8 +16,11 @@ export class RegistrationPage implements OnInit {
   passRep: string;
   phoneNo: string;
   email: string;
+  name: string;
+  age: number;
+
   constructor(private loadingcontroller: LoadingController, private registerGQL: RegisterGQL, private reqOtp: Req_OtpGQL,
-     private router: Router , private alertcontroller: AlertController) { }
+     private router: Router , private alertcontroller: AlertController,private createPat: CreatepatientGQL) { }
 
   ngOnInit() {
   }
@@ -30,9 +33,11 @@ export class RegistrationPage implements OnInit {
       duration:2000
       });
       loading.present();
-      this.registerGQL.mutate({
-        username:this.phoneNo,
-        password:this.pass,
+      this.createPat.mutate({
+        phoneNo:this.phoneNo,
+        pass:this.pass,
+        name:this.name,
+        age:this.age,
         email:this.email
       }).subscribe(next=>
         {

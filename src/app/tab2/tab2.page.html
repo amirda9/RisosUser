@@ -3,6 +3,15 @@
     <ion-title class="ion-text-center" style="color: white">
       Profile
     </ion-title>
+    <ion-buttons slot="end">
+      <ion-button
+        color="light"
+        (click)="logout()"
+        style="box-shadow: 0px 1px 2px #000000"
+      >
+        <ion-icon name="power-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -76,11 +85,24 @@
     </ion-col>
   </ion-row>
 
-  <ion-row class="ion-padding">
+  <!-- <ion-row class="ion-padding">
     <ion-col class="ion-text-center">
       <ion-label>
         <img src="../../assets/final back white-01.png" />
       </ion-label>
+    </ion-col>
+  </ion-row> -->
+
+  <ion-row>
+    <ion-col>
+      <ion-card>
+        <ion-card-title class="ion-padding ion-text-center">
+          Your Pictures
+        </ion-card-title>
+      <ion-card-content>
+
+      </ion-card-content>
+      </ion-card>
     </ion-col>
   </ion-row>
 </ion-content>

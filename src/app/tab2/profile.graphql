@@ -6,6 +6,5 @@ query profile($id:ID!){
     firstName
     lastName
     age
-    status
   }
 }

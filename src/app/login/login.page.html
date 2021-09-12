@@ -24,7 +24,7 @@
 
     <ion-item class="ion-padding-horizontal" lines="full">
       <ion-label position="floating">Password</ion-label>
-      <ion-input type="password" required [(ngModel)]="pass"></ion-input>
+      <ion-input (keyup.enter)="login()" type="password" required [(ngModel)]="pass"></ion-input>
     </ion-item>
 
     <ion-row  class=" ion-padding ion-justify-content-center">

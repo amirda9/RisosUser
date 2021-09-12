@@ -1,0 +1,7 @@
+mutation createpatient($name:String!,$phoneNo:String!,$age:Int! , $pass:String! , $email:String){
+  createPatient(name:$name,  age:$age , phoneNumber : $phoneNo , password:$pass , email:$email ){
+    token
+    user
+    profile
+  }
+}

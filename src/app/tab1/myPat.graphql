@@ -1,0 +1,11 @@
+query mypat($id:ID!){
+  Patient(id:$id){
+    _id
+    patientPic{
+          sideImage
+          fullSmileImage
+          optionalImage
+          smileImage
+    }
+  }
+}

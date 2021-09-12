@@ -1,0 +1,9 @@
+query patient($profile:[String]){
+  allPatient(relatedProfile_In:$profile){
+    edges{
+      node{
+        id
+      }
+    }
+  }
+}

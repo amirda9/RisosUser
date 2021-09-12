@@ -9,17 +9,25 @@
 
 <ion-content>
   <!-- <form> -->
-    <ion-row class="ion-padding">
+    <ion-row  class="ion-padding">
       <ion-col class="ion-text-center">
-          <ion-label>
-              <img src="../../assets/final back white-01.png">
-          </ion-label>
+              <img style="height: 20vh;" src="../../assets/final back white-01.png">
       </ion-col>
   </ion-row>
 
     <ion-item class="ion-padding-horizontal" lines="full" >
       <ion-label position="floating">Phone Number</ion-label>
       <ion-input [(ngModel)]="phoneNo" type="text" required></ion-input>
+    </ion-item>
+
+    <ion-item class="ion-padding-horizontal" lines="full">
+      <ion-label position="floating" >Name</ion-label>
+      <ion-input type="text" [(ngModel)]="name" required></ion-input>
+    </ion-item>
+
+    <ion-item class="ion-padding-horizontal" lines="full">
+      <ion-label position="floating" >Age</ion-label>
+      <ion-input type="number" [(ngModel)]="age" required></ion-input>
     </ion-item>
 
     <ion-item class="ion-padding-horizontal" lines="full">
