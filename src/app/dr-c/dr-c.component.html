@@ -1,3 +1,40 @@
-<p>
-  dr-c works!
-</p>
+
+
+  <div>
+		<ion-grid >
+            <ion-card>
+			<ion-row class="first-row">
+				<div class="company">
+					{{ name }}
+					<br />
+					<span class="model">
+						{{ name }}
+					</span>
+				</div>
+				<img src="https://api.risos.co/mediafiles/{{src}}" />
+			</ion-row>
+			<ion-row class="second-row">
+				<!-- <ion-col>
+					<div class="label">وضعیت</div>
+					<div class="value">
+					</div>
+				</ion-col> -->
+				<ion-col>
+					<div class="label">امتیاز</div>
+					<div class="value">
+						{{rating}}
+						<span class="unit">
+							/ 5
+						</span>
+					</div>
+				</ion-col>
+				<ion-col>
+					<div class="label">نام</div>
+					<div class="value">
+            {{name}}
+					</div>
+				</ion-col>
+			</ion-row>
+            </ion-card>
+		</ion-grid>
+	</div>

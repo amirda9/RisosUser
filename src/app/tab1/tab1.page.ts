@@ -5,6 +5,7 @@ import { AlertController, LoadingController } from '@ionic/angular';
 import Konva from 'konva';
 import { AllsmileGQL, MypatGQL } from 'src/generated/graphql';
 import { P_ID } from '../constants';
+import { DataService } from '../data.service';
 import {
   dentalShades,
   teethImg,
@@ -30,6 +31,8 @@ export class Tab1Page {
   teethless: string;
   smileimg: string;
 
+  ratio: number;
+
   backgroundLayer: Konva.Layer;
   teethLayer: Konva.Layer;
   teethModel: string[];
@@ -50,7 +53,8 @@ export class Tab1Page {
     private renderer: Renderer2,
     private myPatgql: MypatGQL,
     private alertcontroller: AlertController,
-    private smileDesign: AllsmileGQL
+    private smileDesign: AllsmileGQL,
+    private dataService: DataService
   ) {}
   // eslint-disable-next-line @angular-eslint/use-lifecycle-interface
   ngOnInit() {
@@ -59,41 +63,58 @@ export class Tab1Page {
       .watch({
         id: 'Patient:' + localStorage.getItem(P_ID),
       })
-      .valueChanges.subscribe(async (res) => {
-        // this.smileimg = res.data.Patient.patientPic.smileImage;
-        if(res.data.Patient.patientPic){
-          this.smileimg = res.data.Patient.patientPic.smileImage;
-          imageObj.src =
-            'https://api.risos.co/mediafiles/' + String(this.smileimg);
-          imageObj.crossOrigin = 'anonymous';
+      .valueChanges.subscribe(
+        async (res) => {
+          // this.smileimg = res.data.Patient.patientPic.smileImage;
+          if (res.data.Patient.patientPic) {
+            this.smileimg = res.data.Patient.patientPic.smileImage;
+            console.log('smileimg is:' + this.smileimg);
+            imageObj.src =
+              'https://api.risos.co/mediafiles/' + String(this.smileimg);
+            imageObj.crossOrigin = 'anonymous';
+          } else {
+            // console.log("here")
+            const alert = await this.alertcontroller.create({
+              cssClass: 'my-custom-class',
+              // header: 'Alert',
+              // subHeader: 'Subtitle',
+              message: 'There is no picture !',
+              buttons: [
+                {
+                  text: 'UPLOAD',
+                  cssClass: 'my-custom-class',
+                  handler: (blah) => {
+                    this.router.navigate(['/tabs/tab2']);
+                  },
+                },
+              ],
+            });
+            await alert.present();
+          }
+        },
+        (error) => {
+          console.log(1);
         }
-        else{
-          // console.log("here")
-          const alert = await this.alertcontroller.create({
-            cssClass: 'my-custom-class',
-            // header: 'Alert',
-            // subHeader: 'Subtitle',
-            message: 'There is no picture !',
-            buttons: [{text:'UPLOAD',cssClass:'my-custom-class',handler:(blah)=>{this.router.navigate(['/tabs/tab2']);}}]
-          });
-          await alert.present();
-        }
-      },
-      error=>{
-        console.log(1);
-      }
       );
 
-      this.smileDesign.watch({
-        pId:localStorage.getItem(P_ID)
-      }
-      ).valueChanges.subscribe(res=>{
-        console.log(res.data.allSmiledesignservice.edges[0].node.status)
-        this.teethless = res.data.allSmiledesignservice.edges[0].node.teethLessImage;
+    this.smileDesign
+      .watch({
+        pId: localStorage.getItem(P_ID),
+      })
+      .valueChanges.subscribe((res) => {
+        console.log(res.data.allSmiledesignservice.edges[0].node.status);
+        this.teethless =
+          res.data.allSmiledesignservice.edges[0].node.teethLessImage;
         // console.log(this.teethless);
-        this.imageObj3.src = 'https://api.risos.co/mediafiles/'+String(this.teethless);
         // imageObj3.src = "https://api.risos.co/mediafiles/82_74.png";
-        this.imageObj3.crossOrigin="anonymous"
+        this.ratio =
+          res.data.allSmiledesignservice.edges[0].node.heigth /
+          res.data.allSmiledesignservice.edges[0].node.width;
+        this.dataService.setRatio(this.ratio);
+        this.imageObj3.src =
+          'https://api.risos.co/mediafiles/' + String(this.teethless);
+        this.imageObj3.crossOrigin = 'anonymous';
+        console.log(this.teethless);
       });
 
     // imageObj.src = 'https://api.risos.co/mediafiles/1631095827445.jpeg';
@@ -130,8 +151,46 @@ export class Tab1Page {
     };
     this.teethLayer = new Konva.Layer();
     this.stage.add(this.teethLayer);
-    this.imageObj3.src = 'https://api.risos.co/mediafiles/23_23.png';
-    this.imageObj3.crossOrigin = 'anonymous';
+    // this.imageObj3.src = 'https://api.risos.co/mediafiles/23_23.png';
+    // this.imageObj3.crossOrigin = 'anonymous';
+  }
+
+
+  // eslint-disable-next-line @angular-eslint/use-lifecycle-interface
+  ngOnDestroy(){
+    console.log('it happened');
+    const imageObj = new Image();
+    imageObj.src =
+              'https://api.risos.co/mediafiles/' + String(this.smileimg);
+            imageObj.crossOrigin = 'anonymous';
+    this.stage = new Konva.Stage({
+      container: 'container',
+      width: 400,
+      height: 400,
+    });
+    this.teethPositionX = 50;
+    this.teethPositionY = 50;
+    this.backgroundLayer = new Konva.Layer();
+    this.stage.add(this.backgroundLayer);
+    const yoda = new Konva.Image({
+      name: 'person',
+      x: 0,
+      y: 0,
+      image: imageObj,
+      width: 400,
+      height: 400,
+      draggable: false,
+    });
+    imageObj.onload = () => {
+      // add the shape to the layer
+      this.backgroundLayer.add(yoda);
+      yoda.zIndex(0);
+    };
+    this.teethLayer = new Konva.Layer();
+    this.stage.add(this.teethLayer);
+    this.imageObj3.src =
+          'https://api.risos.co/mediafiles/' + String(this.teethless);
+        this.imageObj3.crossOrigin = 'anonymous';
   }
 
   result(e): void {
@@ -212,6 +271,9 @@ export class Tab1Page {
       this.transform.zIndex(this.layerCount);
     }
   }
+
+
+
   choseTeethPerModel(ev: any) {
     if (this.chosenTeeth !== ev.detail.value) {
       this.chosenTeeth = ev.detail.value;
@@ -304,6 +366,7 @@ export class Tab1Page {
       },
     };
 
+    this.ngOnDestroy();
     this.router.navigate(['/comparison'], navigationExtras);
   }
 }

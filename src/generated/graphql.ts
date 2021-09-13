@@ -2563,6 +2563,11 @@ export type SmileDesignNode = {
   id: Scalars['ID'];
 };
 
+export type UsersQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type UsersQuery = { __typename?: 'Query', allDoctor?: Maybe<{ __typename?: 'DoctorConnection', edges: Array<Maybe<{ __typename?: 'DoctorEdge', node?: Maybe<{ __typename?: 'Doctor', id: string, rating: number, relatedProfile: { __typename?: 'Profile', email?: Maybe<string>, profilePic?: Maybe<string>, role: ExtendprofileProfileRoleChoices, firstName?: Maybe<string>, phoneNumber?: Maybe<string> } }> }>> }> };
+
 export type ForgetPassMutationVariables = Exact<{
   phoneNumber: Scalars['String'];
 }>;
@@ -2664,6 +2669,36 @@ export type Verify_UserMutationVariables = Exact<{
 
 export type Verify_UserMutation = { __typename?: 'Mutations', verifyUser?: Maybe<{ __typename?: 'VerifyUser', status?: Maybe<string> }> };
 
+export const UsersDocument = gql`
+    query users {
+  allDoctor {
+    edges {
+      node {
+        id
+        rating
+        relatedProfile {
+          email
+          profilePic
+          role
+          firstName
+          phoneNumber
+        }
+      }
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class UsersGQL extends Apollo.Query<UsersQuery, UsersQueryVariables> {
+    document = UsersDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const ForgetPassDocument = gql`
     mutation forgetPass($phoneNumber: String!) {
   forgetPass(phoneNumber: $phoneNumber) {

@@ -7,5 +7,12 @@
 </ion-header>
 
 <ion-content>
+  <div *ngFor="let item of users  | async">
+  <ion-row *ngIf="item.node.relatedProfile.role === 'DOCTOR' ">
+    <ion-col>
+      <app-dr-c name={{item.node.relatedProfile.firstName}} src={{item.node.relatedProfile.profilePic}} rating={{item.node.rating}}></app-dr-c>
+    </ion-col>
+  </ion-row>
+</div>
 
 </ion-content>

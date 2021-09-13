@@ -1,0 +1,17 @@
+query users{
+  allDoctor{
+    edges{
+      node{
+        id
+        rating
+        relatedProfile{
+          email
+          profilePic
+          role
+          firstName
+          phoneNumber
+        }
+      }
+    }
+  }
+}

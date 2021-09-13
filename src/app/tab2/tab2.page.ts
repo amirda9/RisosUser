@@ -63,7 +63,7 @@ export class Tab2Page {
 
   async fileChangeEvent(event: any){
     this.imageChangedEvent = event;
-    console.log('here');
+    console.log(event.target.files[0]);
     const alert = await this.alertcontroller.create({
       cssClass: 'my-custom-class',
       // header: 'Alert',
@@ -75,7 +75,7 @@ export class Tab2Page {
         .mutate({
           id: my,
           pics: {
-            smileImage: event.file,
+            smileImage: event.target.files[0],
           },
         })
         .subscribe((res) => {
