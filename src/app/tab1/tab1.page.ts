@@ -55,7 +55,13 @@ export class Tab1Page {
     private alertcontroller: AlertController,
     private smileDesign: AllsmileGQL,
     private dataService: DataService
-  ) {}
+  ) {
+    this.ratio = 1;
+    if(dataService.getRatio()){
+      this.ratio = dataService.getRatio();
+    }
+
+  }
   // eslint-disable-next-line @angular-eslint/use-lifecycle-interface
   ngOnInit() {
     const imageObj = new Image();
@@ -107,9 +113,6 @@ export class Tab1Page {
           res.data.allSmiledesignservice.edges[0].node.teethLessImage;
         // console.log(this.teethless);
         // imageObj3.src = "https://api.risos.co/mediafiles/82_74.png";
-        this.ratio =
-          res.data.allSmiledesignservice.edges[0].node.heigth /
-          res.data.allSmiledesignservice.edges[0].node.width;
         this.dataService.setRatio(this.ratio);
         this.imageObj3.src =
           'https://api.risos.co/mediafiles/' + String(this.teethless);
@@ -128,7 +131,7 @@ export class Tab1Page {
     this.stage = new Konva.Stage({
       container: 'container',
       width: 400,
-      height: 400,
+      height: 400*this.ratio,
     });
     this.teethPositionX = 50;
     this.teethPositionY = 50;
@@ -141,7 +144,7 @@ export class Tab1Page {
       y: 0,
       image: imageObj,
       width: 400,
-      height: 400,
+      height: 400*this.ratio,
       draggable: false,
     });
     imageObj.onload = () => {
@@ -166,7 +169,7 @@ export class Tab1Page {
     this.stage = new Konva.Stage({
       container: 'container',
       width: 400,
-      height: 400,
+      height: 400*this.ratio,
     });
     this.teethPositionX = 50;
     this.teethPositionY = 50;
@@ -178,7 +181,7 @@ export class Tab1Page {
       y: 0,
       image: imageObj,
       width: 400,
-      height: 400,
+      height: 400*this.ratio,
       draggable: false,
     });
     imageObj.onload = () => {

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MypatGQL } from 'src/generated/graphql';
 import { P_ID } from '../constants';
+import { DataService } from '../data.service';
 
 @Component({
   selector: 'app-comparison',
@@ -16,10 +17,16 @@ export class ComparisonPage implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private patientgql: MypatGQL
+    private patientgql: MypatGQL,
+    private dataService: DataService
   ) {
     if (this.router.getCurrentNavigation().extras.state) {
       this.img = this.router.getCurrentNavigation().extras.state.image;
+    }
+
+    this.ratio = 1;
+    if(dataService.getRatio()){
+      this.ratio = dataService.getRatio();
     }
   }
 

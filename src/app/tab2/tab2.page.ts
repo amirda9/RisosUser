@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { MypatGQL, ProfileGQL, Update_PicGQL } from 'src/generated/graphql';
 import { AUTHTOKEN, ID, P_ID, USERNAME } from '../constants';
 import { CroppedEvent } from 'ngx-photo-editor';
-import { AlertController } from '@ionic/angular';
+import { AlertController, LoadingController } from '@ionic/angular';
 
 @Component({
   selector: 'app-tab2',
@@ -27,7 +27,8 @@ export class Tab2Page {
     private router: Router,
     private myPatgql: MypatGQL,
     private updatePic: Update_PicGQL,
-    private alertcontroller: AlertController
+    private alertcontroller: AlertController,
+    private loadingController: LoadingController
   ) {
     myPatgql
       .watch({
@@ -78,9 +79,15 @@ export class Tab2Page {
             smileImage: event.target.files[0],
           },
         })
-        .subscribe((res) => {
+        .subscribe(async (res) => {
           console.log(res.data.updatePatientPic.status);
-          this.myPatgql
+          const loading = await this.loadingController.create({
+            message: 'Please Wait',
+            spinner: 'bubbles'
+          });
+          await loading.present();
+          setTimeout(() => {
+            this.myPatgql
             .watch({
               id: 'Patient:' + localStorage.getItem(P_ID),
             })
@@ -91,6 +98,8 @@ export class Tab2Page {
                 this.smileImg = 'default-profile.jpg';
               }
             });
+            loading.dismiss();
+          }, 2000);
         });
       }},
       {text:'No',cssClass:'my-custom-class'}]
